@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon.ico') }}">
+</head>
+<body id="body" class="d-flex flex-column min-vh-100">
+    <div class="container my-5 flex-grow-1">
+        <div class="d-flex justify-content-between">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="themeToggle">
+                <label class="custom-control-label" for="themeToggle">Thème sombre</label>
+            </div>
+            {% if is_logged_in() %}
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Déconnexion</a>
+            {% endif %}
+        </div>
+        <h1 class="text-center mb-5">Task Manager</h1>
+        <form action="/create_list" method="post">
+            <input type="text" name="list_name" placeholder="Enter list name">
+            <button type="submit" id="create">Create List</button>
+        </form>
+        
+        <ul>
+            {% for user_name, task_lists in task_lists.items() %}
+                <h3>Lists for {{ user_name }}</h3>
+                {% for task_list in task_lists %}
+                    <li id="card">
+                        <a href="/list/{{ task_list.id }}" id="item">{{ task_list.name }}</a>
+                        <a href="/delete_list/{{ task_list.id }}">Delete</a>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    <footer class="text-center py-4">
+        &copy; 2024 Rafael ISTE Tous droits réservés.
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const body = document.getElementById('body');
+        const themeToggle = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.checked = true;
+        } else {
+            body.classList.add('light-theme');
+        }
+        
+        themeToggle.addEventListener('change', function() {
+            body.classList.toggle('dark-theme');
+            body.classList.toggle('light-theme');
+            localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>

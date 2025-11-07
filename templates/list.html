@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ list_name }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon.ico') }}">
+    <style>
+        li {
+            background-color: #fff;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body id="body" class="d-flex flex-column min-vh-100">
+    <div class="container my-5 flex-grow-1">
+        <div class="d-flex justify-content-end">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="themeToggle">
+                <label class="custom-control-label" for="themeToggle">Thème sombre</label>
+            </div>
+        </div>
+        <h1 class="text-center mb-5">{{ list_name }}</h1>
+        <form action="/add_task/{{ task_list.id }}" method="post">
+            <input type="text" name="title" placeholder="Enter task title">
+            <button type="submit" id="create">Add Task</button>
+        </form>
+        <ul>
+            {% for task in tasks %}
+            <li id="card">
+                <span>{{ task.title }}</span>
+                <a href="/remove_task/{{ task.id }}">Remove</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <footer class="text-center py-4">
+        &copy; 2024 Rafael ISTE Tous droits réservés.
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const body = document.getElementById('body');
+        const themeToggle = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.checked = true;
+        } else {
+            body.classList.add('light-theme');
+        }
+
+        themeToggle.addEventListener('change', function() {
+            body.classList.toggle('dark-theme');
+            body.classList.toggle('light-theme');
+            localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
